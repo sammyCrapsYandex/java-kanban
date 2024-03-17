@@ -9,13 +9,14 @@ import model.TaskStatus;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class TaskManager {
 
     private static int id = 1;
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, Epic> epics;
-    private HashMap<Integer, Subtask> subtasks;
+    private final HashMap<Integer, Task> tasks;
+    private final HashMap<Integer, Epic> epics;
+    private final HashMap<Integer, Subtask> subtasks;
 
     public TaskManager() {
         this.tasks = new HashMap<>();
@@ -27,36 +28,30 @@ public class TaskManager {
         return id++;
     }
 
-    public Task createTask(String name, String description) throws AlreadyExistsException {
-        Task task = new Task(name, description, getId());
-        if (!tasks.containsKey(task.getId())) {
-            tasks.put(task.getId(), task);
-            return task;
+    public void createTask(Task newTask) throws AlreadyExistsException {
+        if (!tasks.containsKey(newTask.getId())) {
+            tasks.put(newTask.getId(), newTask);
         } else {
             throw new AlreadyExistsException("object already exists");
         }
     }
 
-    public Subtask createSubTask(String name, String description, int epicId) throws AlreadyExistsException, EpicDoesntExistException {
-        Subtask subtask = new Subtask(name, description, getId(), epicId);
-        if (!epics.containsKey(subtask.getEpicId())) {
+    public void createSubTask(Subtask newSubtask) throws AlreadyExistsException, EpicDoesntExistException {
+        if (!epics.containsKey(newSubtask.getEpicId())) {
             throw new EpicDoesntExistException("Epic does not exist");
         }
-        if (!subtasks.containsKey(subtask.getId())) {
-            subtasks.put(subtask.getId(), subtask);
-            epics.get(epicId).addSubtask(subtask.getId());
-            updateEpicStatus(epics.get(epicId));
-            return subtask;
+        if (!subtasks.containsKey(newSubtask.getId())) {
+            subtasks.put(newSubtask.getId(), newSubtask);
+            epics.get(newSubtask.getEpicId()).addSubtask(newSubtask.getId());
+            updateEpicStatus(epics.get(newSubtask.getEpicId()));
         } else {
             throw new AlreadyExistsException("Object already exists");
         }
     }
 
-    public Epic createEpic(String name, String description) throws AlreadyExistsException {
-        Epic epic = new Epic(name, description, getId());
-        if (!epics.containsKey(epic.getId())) {
-            epics.put(epic.getId(), epic);
-            return epic;
+    public void createEpic(Epic newEpic) throws AlreadyExistsException {
+        if (!epics.containsKey(newEpic.getId())) {
+            epics.put(newEpic.getId(), newEpic);
         } else {
             throw new AlreadyExistsException("object already exists");
         }
@@ -79,10 +74,23 @@ public class TaskManager {
     }
 
     public void deleteAllEpics() {
+        for (HashMap.Entry<Integer, Epic> entry: epics.entrySet()) {
+            HashSet<Integer> subtasksByEpic = epics.get(entry.getKey()).getSubtasks();
+            if (!subtasksByEpic.isEmpty()) {
+                for (int subTaskId : subtasksByEpic) {
+                    subtasks.remove(subTaskId);
+                }
+            }
+        }
         epics.clear();
     }
 
     public void deleteAllSubtasks() {
+        for (HashMap.Entry<Integer, Subtask> entry: subtasks.entrySet()) {
+            int epicId = subtasks.get(entry.getKey()).getEpicId();
+            epics.get(epicId).deleteSubtask(entry.getKey());
+            updateEpicStatus(epics.get(epicId));
+        }
         subtasks.clear();
     }
 

@@ -7,19 +7,25 @@ import model.TaskStatus;
 import service.TaskManager;
 
 public class Main {
-
     public static void main(String[] args) throws AlreadyExistsException, EpicDoesntExistException {
         System.out.println("Поехали!");
         TaskManager taskManager = new TaskManager();
-        Task task1 = taskManager.createTask("Помыть посуду", "тут должно быть описание");
-        Task task2 = taskManager.createTask("Поспать", "когда-нибудь ты это сделаешь");
+        taskManager.createTask(new Task("Помыть посуду", "тут должно быть описание", TaskManager.getId()));
+        taskManager.createTask(new Task("Поспать", "когда-нибудь ты это сделаешь", TaskManager.getId()));
 
-        Epic epic3 = taskManager.createEpic("Переехать в новую квартиру", null);
-        Subtask subtask4 = taskManager.createSubTask("Выбрать бюджет", null, epic3.getId());
-        Subtask subtask5 = taskManager.createSubTask("Найти квартиру на авито", "Требуется завести аккаунт", epic3.getId());
+        Epic epicWithTwoTasks = new Epic("Переехать в новую квартиру", null, TaskManager.getId());
+        taskManager.createEpic(epicWithTwoTasks);
 
-        Epic epic6 = taskManager.createEpic("Стать разработчиком", "надо что-то делать");
-        Subtask subtask7 = taskManager.createSubTask("Пройти курс в яндексе", "Не вылететь из своей кагорты", epic6.getId());
+        Subtask subtask4 = new Subtask("Выбрать бюджет", null, TaskManager.getId(), epicWithTwoTasks.getId());
+        taskManager.createSubTask(subtask4);
+
+        Subtask subtask5 = new Subtask("Найти квартиру на авито", "Требуется завести аккаунт", TaskManager.getId(), epicWithTwoTasks.getId());
+        taskManager.createSubTask(subtask5);
+
+        Epic epicWithOneTasks = new Epic("Стать разработчиком", "надо что-то делать", TaskManager.getId());
+        taskManager.createEpic(epicWithOneTasks);
+        Subtask subtask7 = new Subtask("Пройти курс в яндексе", "Не вылететь из своей кагорты", TaskManager.getId(), epicWithOneTasks.getId());
+        taskManager.createSubTask(subtask7);
 
         System.out.println(taskManager);
 
@@ -28,8 +34,11 @@ public class Main {
                 subtask4.getDescription(),
                 subtask4.getId(),
                 subtask4.getEpicId(),
-                TaskStatus.IN_PROGRESS);
+                TaskStatus.IN_PROGRESS
+        );
+
         taskManager.updateSubTask(updateSubtask4);
+        System.out.println(taskManager);
         Subtask updateSubtask7 = new Subtask(
                 subtask7.getName(),
                 subtask7.getDescription(),
@@ -37,10 +46,13 @@ public class Main {
                 subtask7.getEpicId(),
                 TaskStatus.DONE);
         taskManager.updateSubTask(updateSubtask7);
+
         System.out.println(taskManager);
 
-        Subtask subtask8 = taskManager.createSubTask("НАйти мотивацию", null, epic6.getId());
+        taskManager.createSubTask(new Subtask("Найти мотивацию", null, TaskManager.getId(), epicWithOneTasks.getId()));
+
         System.out.println(taskManager);
+
     }
 
 }
