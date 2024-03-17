@@ -9,7 +9,6 @@ import model.TaskStatus;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class TaskManager {
 
@@ -28,7 +27,7 @@ public class TaskManager {
         return id++;
     }
 
-    public void createTask(Task newTask) throws AlreadyExistsException {
+    public void createTask(Task newTask){
         if (!tasks.containsKey(newTask.getId())) {
             tasks.put(newTask.getId(), newTask);
         } else {
@@ -36,7 +35,7 @@ public class TaskManager {
         }
     }
 
-    public void createSubTask(Subtask newSubtask) throws AlreadyExistsException, EpicDoesntExistException {
+    public void createSubTask(Subtask newSubtask){
         if (!epics.containsKey(newSubtask.getEpicId())) {
             throw new EpicDoesntExistException("Epic does not exist");
         }
@@ -49,7 +48,7 @@ public class TaskManager {
         }
     }
 
-    public void createEpic(Epic newEpic) throws AlreadyExistsException {
+    public void createEpic(Epic newEpic){
         if (!epics.containsKey(newEpic.getId())) {
             epics.put(newEpic.getId(), newEpic);
         } else {

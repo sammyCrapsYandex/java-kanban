@@ -1,5 +1,3 @@
-import exception.AlreadyExistsException;
-import exception.EpicDoesntExistException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -7,7 +5,7 @@ import model.TaskStatus;
 import service.TaskManager;
 
 public class Main {
-    public static void main(String[] args) throws AlreadyExistsException, EpicDoesntExistException {
+    public static void main(String[] args){
         System.out.println("Поехали!");
         TaskManager taskManager = new TaskManager();
         taskManager.createTask(new Task("Помыть посуду", "тут должно быть описание", TaskManager.getId()));
