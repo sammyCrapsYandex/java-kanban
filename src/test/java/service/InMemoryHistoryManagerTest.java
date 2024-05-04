@@ -147,7 +147,7 @@ class InMemoryHistoryManagerTest {
     }
 
     private static Stream<Arguments> provideDeletionPositions() {
-        List<Task> tasks =TestDataBuilder.buildTasks();
+        List<Task> tasks = TestDataBuilder.buildTasks();
         return Stream.of(
                 Arguments.of(0, 1, 0, "beginning"),
                 Arguments.of((tasks.size() - 1) / 2, 1, 0, "middle"),
