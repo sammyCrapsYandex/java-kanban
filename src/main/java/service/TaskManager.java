@@ -5,10 +5,11 @@ import model.Subtask;
 import model.Task;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 
 public interface TaskManager {
+
+    int getCounter();
 
     Task addTask(Task newTask);
 
@@ -16,11 +17,11 @@ public interface TaskManager {
 
     Epic addEpic(Epic newEpic);
 
-    HashMap<Integer, Task> getAllTasks();
+    ArrayList<Task> getAllTasks();
 
-    HashMap<Integer, Subtask> getAllSubtasks();
+    ArrayList<Subtask> getAllSubtasks();
 
-    HashMap<Integer, Epic> getAllEpics();
+    ArrayList<Epic> getAllEpics();
 
     Set<Integer> getSubtasksByEpicId(int id);
 

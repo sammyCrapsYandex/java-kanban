@@ -21,10 +21,12 @@ import java.util.stream.Stream;
 class InMemoryHistoryManagerTest {
 
     private HistoryManager historyManager;
+    private TestDataBuilder testDataBuilder;
 
     @BeforeEach
     void setUp() {
         historyManager = new InMemoryHistoryManager();
+        testDataBuilder = new TestDataBuilder();
     }
 
     @ParameterizedTest
@@ -53,7 +55,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldKeepViewingTaskOrderFromOldToNew() {
-        List<Task> expectedTasks = TestDataBuilder.buildTasks();
+        List<Task> expectedTasks = testDataBuilder.buildTasks();
         for (Task task : expectedTasks) {
             historyManager.add(task);
         }
@@ -68,7 +70,7 @@ class InMemoryHistoryManagerTest {
         fillUpHistoryManager();
         int expectedHistorySize = historyManager.getHistory().size();
         int expectedPosition = historyManager.getHistory().size() - 1;
-        Task taskToAdd = TestDataBuilder.buildCopyTask(historyManager.getHistory().get(1));
+        Task taskToAdd = testDataBuilder.buildCopyTask(historyManager.getHistory().get(1));
 
         taskToAdd.setStatus(TaskStatus.DONE);
 
@@ -119,7 +121,7 @@ class InMemoryHistoryManagerTest {
         fillUpHistoryManager();
         int expectedHistorySize = historyManager.getHistory().size();
         int idToDelete = 187;
-        final Task taskToDelete = TestDataBuilder.buildTask(idToDelete, "t", "d", TaskStatus.NEW);
+        final Task taskToDelete = testDataBuilder.buildTask(idToDelete, "t", "d", TaskStatus.NEW);
         boolean isNotValidId = !historyManager.getHistory().contains(taskToDelete);
 
         historyManager.remove(idToDelete);
@@ -145,7 +147,7 @@ class InMemoryHistoryManagerTest {
     }
 
     private static Stream<Arguments> provideDeletionPositions() {
-        List<Task> tasks = TestDataBuilder.buildTasks();
+        List<Task> tasks =TestDataBuilder.buildTasks();
         return Stream.of(
                 Arguments.of(0, 1, 0, "beginning"),
                 Arguments.of((tasks.size() - 1) / 2, 1, 0, "middle"),
@@ -161,7 +163,7 @@ class InMemoryHistoryManagerTest {
     }
 
     private void fillUpHistoryManager() {
-        List<Task> tasks = TestDataBuilder.buildTasks();
+        List<Task> tasks = testDataBuilder.buildTasks();
         for (Task task : tasks) {
             historyManager.add(task);
         }

@@ -13,10 +13,12 @@ class EpicTest {
     private Epic epic;
     private Subtask subtask1;
     private Subtask subtask2;
+    private TestDataBuilder testDataBuilder;
 
     @BeforeEach
     void setUp() {
-        taskManager = TestDataBuilder.buildTaskManager();
+        testDataBuilder = new TestDataBuilder();
+        taskManager = testDataBuilder.buildTaskManager();
         setUpEpicWithoutSubtasksInTaskManager();
     }
 
@@ -79,13 +81,13 @@ class EpicTest {
     }
 
     void setUpEpicWithoutSubtasksInTaskManager() {
-        epic = TestDataBuilder.buildEpic("Epic", "You know what you need.");
+        epic = testDataBuilder.buildEpic("Epic", "You know what you need.");
         taskManager.addEpic(epic);
     }
 
     void addNewSubtasksToEpic() {
-        subtask1 = TestDataBuilder.buildSubtask("Step1", "Start", epic.getId());
-        subtask2 = TestDataBuilder.buildSubtask("Step2", "Finish", epic.getId());
+        subtask1 = testDataBuilder.buildSubtask("Step1", "Start", epic.getId());
+        subtask2 = testDataBuilder.buildSubtask("Step2", "Finish", epic.getId());
         taskManager.addSubTask(subtask1);
         taskManager.addSubTask(subtask2);
     }

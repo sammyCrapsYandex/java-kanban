@@ -6,6 +6,7 @@ import model.Task;
 import model.TaskStatus;
 import service.InMemoryTaskManager;
 import service.TaskManager;
+import utils.Managers;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,15 +15,23 @@ import java.util.List;
  * Utility class for preparing test data
  */
 public class TestDataBuilder {
-    private TestDataBuilder() {
+
+    private final TaskManager taskManager;
+
+    public TestDataBuilder(TaskManager taskManager) {
+        this.taskManager = taskManager;
     }
 
-    public static TaskManager buildTaskManager() {
+    public TestDataBuilder() {
+        this.taskManager = Managers.getDefault();
+    }
+
+    public TaskManager buildTaskManager() {
         return new InMemoryTaskManager();
     }
 
-    public static Task buildTask(String title, String description) {
-        return new Task(title, description, InMemoryTaskManager.getId());
+    public Task buildTask(String title, String description) {
+        return new Task(title, description, taskManager.getCounter());
     }
 
     public static Task buildTask(int id, String title, String description, TaskStatus status) {
@@ -31,27 +40,27 @@ public class TestDataBuilder {
         return task;
     }
 
-    public static Epic buildEpic(String title, String description) {
-        return new Epic(title, description, InMemoryTaskManager.getId());
+    public Epic buildEpic(String title, String description) {
+        return new Epic(title, description, taskManager.getCounter());
     }
 
     public static Epic buildEpic(int id, String title, String description) {
         return new Epic(title, description, id);
     }
 
-    public static Subtask buildSubtask(String title, String description, int epicId) {
-        return new Subtask(title, description, InMemoryTaskManager.getId(), epicId);
+    public Subtask buildSubtask(String title, String description, int epicId) {
+        return new Subtask(title, description, taskManager.getCounter(), epicId);
     }
 
     public static Subtask buildSubtask(int id, String title, String description, int epicId) {
         return new Subtask(title, description, id, epicId);
     }
 
-    public static Task buildCopyTask(Task task) {
+    public Task buildCopyTask(Task task) {
         return buildTask(task.getId(), task.getName(), task.getDescription(), task.getStatus());
     }
 
-    public static Epic buildCopyEpic(Epic epic) {
+    public Epic buildCopyEpic(Epic epic) {
         Epic result = buildEpic(epic.getId(), epic.getName(), epic.getDescription());
         for (int subTaskId : epic.getSubtasks()) {
             result.addSubtaskById(subTaskId);
@@ -59,7 +68,7 @@ public class TestDataBuilder {
         return result;
     }
 
-    public static Subtask buildCopySubtask(Subtask subtask) {
+    public Subtask buildCopySubtask(Subtask subtask) {
         Subtask result = buildSubtask(subtask.getId(), subtask.getName(), subtask.getDescription(), subtask.getEpicId());
         result.setStatus(subtask.getStatus());
         return result;
