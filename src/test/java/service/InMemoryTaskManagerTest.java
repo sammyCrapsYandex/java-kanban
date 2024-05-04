@@ -586,7 +586,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void EpicThrowsExceptionWhenAddingItselfAsSubtask() {
+    void epicThrowsExceptionWhenAddingItselfAsSubtask() {
         Task epic = testDataBuilder.buildEpic("Epic", "d");
 
         taskManager.addEpic((Epic) epic);
