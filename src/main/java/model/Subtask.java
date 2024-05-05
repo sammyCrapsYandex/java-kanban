@@ -1,7 +1,7 @@
 package model;
 
 public class Subtask extends Task {
-    private final int epicId;
+    private int epicId;
 
     public Subtask(String name, String description, int id, int epicId) {
         super(name, description, id);
@@ -17,14 +17,7 @@ public class Subtask extends Task {
         return epicId;
     }
 
-    @Override
-    public String toString() {
-        return "Subtask{" +
-                "id=" + getId() +
-                ", epicId=" + getEpicId() +
-                ", name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status=" + getStatus() +
-                '}';
+    public void setEpicId(int epicId) {
+        this.epicId = epicId;
     }
 }
